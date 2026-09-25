@@ -1,0 +1,32 @@
+name: Build S8N Synth
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  firmware:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test note lifecycle
+        run: |
+          g++ -std=c++17 -Wall -Wextra -Werror -pedantic -Iinclude tests/performance_test.cpp -o /tmp/s8n-test
+          /tmp/s8n-test
+      - name: Install PlatformIO
+        run: python -m pip install platformio==6.2.0
+      - name: Build firmware
+        run: python -m platformio run
+      - uses: actions/upload-artifact@v4
+        with:
+          name: S8N-Synth-cardputer-${{ github.sha }}
+          if-no-files-found: error
+          path: |
+            .pio/build/cardputer/firmware.bin
+            .pio/build/cardputer/bootloader.bin
+            .pio/build/cardputer/partitions.bin
+            .pio/build/cardputer/firmware.elf
