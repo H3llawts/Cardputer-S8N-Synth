@@ -1,6 +1,6 @@
 # S8N Synth
 
-A pocket synth, sampler and groovebox project for Rob's M5Stack Cardputer, UnitSynth and Unit MIDI.
+A pocket synth, sampler and groovebox project for S8N’s M5Stack Cardputer, UnitSynth and Unit MIDI.
 
 **v0.1 milestone: playable MIDI synth controller.** Sequencing and sampling are roadmap items, not implemented features. Target: original Cardputer (K132). ADV has not been validated.
 
