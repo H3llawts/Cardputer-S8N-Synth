@@ -2,6 +2,10 @@
 
 S8N turns the original M5Stack Cardputer (K132) and one Unit Synth or Unit MIDI into a pocket groovebox. It boots into the original Saw Lead keyboard. Press **Tab**, then **Space**, to start the first of four factory grooves at 110 BPM. Press **1–4** to change the groove while it plays.
 
+[Download the v0.2 firmware](firmware/S8N-Synth-v0.2-Cardputer-merged.bin?raw=1) · [Flashing and first groove](docs/S8N-Synth-Quickstart.txt)
+
+![Live Keys, Step Grid, Sound and Sampler screens](docs/S8N-Synth-UI.png)
+
 ## Hookup
 
 Power off the Cardputer, plug either unit into its Grove socket with the stock cable, and insert a FAT32 microSD for samples, projects and takes. Power up. The Unit Synth plays through its speaker. On Unit MIDI, connect headphones or powered speakers to **AUDIO**. Use **FROM CORE / Separate** to send the groove to external MIDI OUT, or **BYPASS** to play the selected groove lane from MIDI IN. The engine uses its own clock.
