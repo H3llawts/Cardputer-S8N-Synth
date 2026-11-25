@@ -1,93 +1,86 @@
-# S8N Synth
+# S8N Synth v0.2
 
-A pocket synth, sampler and groovebox project for Rob's M5Stack Cardputer, UnitSynth and Unit MIDI.
+S8N turns the original M5Stack Cardputer (K132) and one Unit Synth or Unit MIDI into a pocket groovebox. It boots into the original Saw Lead keyboard. Press **Tab**, then **Space**, to start the first of four factory grooves at 110 BPM. Press **1–4** to change the groove while it plays.
 
-**v0.1 milestone: playable MIDI synth controller.** Sequencing and sampling are roadmap items, not implemented features. Target: original Cardputer (K132). ADV has not been validated.
+## Hookup
 
-## Play now
+Power off the Cardputer, plug either unit into its Grove socket with the stock cable, and insert a FAT32 microSD for samples, projects and takes. Power up. The Unit Synth plays through its speaker. On Unit MIDI, connect headphones or powered speakers to **AUDIO**. Use **FROM CORE / Separate** to send the groove to external MIDI OUT, or **BYPASS** to play the selected groove lane from MIDI IN. The engine uses its own clock.
 
-Connect **one** UnitSynth or Unit MIDI to the Cardputer with a standard Grove cable. The same firmware drives either module; no profile selection is necessary.
+| Sound | Where it goes |
+|---|---|
+| Synth, chords and GM drums | Cardputer TX on GPIO2 sends MIDI at 31,250 baud. The attached unit produces the sound. |
+| Sample pads and recorded-take playback | Cardputer speaker |
+| Recorded audio | Cardputer microphone captures the room. A sounding Unit Synth or a speaker connected to Unit MIDI can be captured acoustically. |
+| External notes | Unit MIDI in BYPASS sends incoming notes on GPIO1. The groovebox maps them to the selected lane. |
 
-- **UnitSynth:** sound comes from the module's speaker.
-- **Unit MIDI:** use its dedicated audio/headphone output (not its TRS MIDI ports). Separate mode also forwards the Cardputer's output to external MIDI gear. Bypass mode sends Cardputer notes to the internal synth while connecting external MIDI IN directly to OUT.
-- The Cardputer speaker is not used. This version sends MIDI only; it does not listen to MIDI IN, accept a USB MIDI keyboard, or load audio samples.
+The onboard mic and speaker share GPIO43. Local sample playback pauses during microphone capture. The external synth can continue throughout a take. Unit MIDI's AUDIO jack carries its synth output alone. Groovebox MIDI input accepts note-on/off and release controls. Project files store the note data digitally.
 
-Boot starts on GM **Saw Lead**, program **82** on screen (81 in MIDI), channel 1, velocity 96, volume 80. Drums use MIDI channel 10.
+## Make a loop
+
+1. From **Live Keys**, press **Tab** for **Step Grid**, then **Space**. The eight lanes are kick, snare, hat, bass, lead, chord, Sample A and Sample B.
+2. Use **;** and **.** to select a lane, **,** and **/** to move along its 16 steps, and **Enter** to add or remove a hit. **M** mutes the selected lane. The white outline marks your edit position and the moving pink line shows playback.
+3. On a melodic lane, play **A W S E D F T G Y H U J K**. **R** arms overdub. With the transport running, notes land on the nearest swung sixteenth. Each lane stores one pitch per step. Chord plays a major triad from that root.
+4. **Tab** opens **Sound** for the selected lane. Pick a field with **;** or **.**, then adjust with **,** or **/**. Hold **Fn** for larger changes. Melodic lanes have 128 GM programs, volume, filter cutoff and reverb. Drum lanes edit the current step's MIDI drum note and the lane level. Sample lanes choose a pad slot and level.
+5. Tab through **Sampler** to **Project**, select a slot with **,** or **/**, then press **S**. **L** recalls that slot, stops the transport and selects pattern A. Save before recalling another project. The next boot starts with the factory groove, so recall a saved project when you want it back.
+
+**Tab** cycles the four groovebox pages while the music plays. The **backtick** key stops the groove and returns to Live Keys. **Shift + /** opens the current page's key guide. **G0** is the physical panic button.
+
+### Grid controls
 
 | Keys | Action |
 |---|---|
-| `A W S E D F T G Y H U J K` | Chromatic notes C through the next C |
-| `1` / `2` | Previous / next GM instrument (PLAY only) |
-| `3` / `4` | Volume down / up |
-| `5` / `6` | Note velocity down / up |
-| `7` / `8` | Octave down / up; C0 through C8 bases |
-| `9` | Toggle PLAY / DRUM |
-| `0` | Reverb send: 0 / 24 / 64 |
-| `Space` or physical `G0` button | Panic: release notes and silence all 16 MIDI channels |
-| `Enter` | Help screen / return |
+| Space / R | Start or stop / arm or disarm note overdub |
+| 1, 2, 3, 4 | Select pattern A, B, C or D at the current transport position |
+| - / = | Tempo, 40–240 BPM |
+| Z / X | Swing, 50–75% |
+| [ / ] | Lower / raise the current step's pitch |
+| 5 / 6 | Edit step velocity in increments of 8. Editing a rest assigns a hit. |
+| 7 / 8 | Edit step gate in increments of 5%. Sample slots always play as one-shots. |
+| 9 / 0 | Lower / raise the melodic keyboard octave |
+| Fn + a piano key while stopped | Audition and write that pitch to the current step |
+| M / G0 | Mute selected lane / stop transport and release voices |
 
-Drum keys in the same order: kick, rimshot, snare, clap, closed hat, open hat, pedal hat, low floor tom, high floor tom, low tom, crash, ride, cowbell.
+### Original Live Keys controls
 
-The keyboard is not velocity-sensitive: the velocity setting applies to subsequent note attacks. Original Cardputer matrix rollover limits which chords register; firmware cannot remove that hardware limit. Changing octave, patch, mode or help state silences existing notes. Release held keys before playing again. Settings reset on reboot in v0.1.
+| Keys | Action |
+|---|---|
+| A W S E D F T G Y H U J K | C through the next C, or 13 percussion hits |
+| 1 / 2 | Previous / next GM patch |
+| 3 / 4 and 5 / 6 | Volume down / up and velocity down / up |
+| 7 / 8 | Octave down / up |
+| 9 / 0 | Toggle keys and drums / cycle reverb |
+| Space or G0 | Panic across all 16 MIDI channels |
+| Enter / Tab | Open or close the guide / enter the groovebox |
 
-## Wiring
+## Sample a hit
 
-| Grove wire | Original Cardputer | Module |
-|---|---|---|
-| Black | GND | GND |
-| Red | 5V | 5V |
-| Yellow | GPIO2, UART TX | UART RX (MIDI input) |
-| White | GPIO1, unused by this firmware | Unit MIDI TX / UnitSynth unused pin |
+On **Sampler**, pick one of four slots with **,** or **/**. Press **R**, make a sound, then press **R** again to finish early. Capture stops automatically at **0.75 seconds**. **Enter** plays the result. Each slot starts with a generated kick, snare, hat or tom, so the sampler works before your first recording.
 
-UART is **31250 baud, 8N1**. No I2C addresses, no I2C hub, no crossed Grove cable. Do not connect both modules with an ordinary splitter. Dual-module routing requires a separately verified wiring/power design. Connect modules with power off.
+Successful captures replace the selected slot in RAM and auto-save when microSD is available. The pads are shared by all eight project slots. To use a captured hit in a groove, select Sample A or B on the Grid, assign its slot in Sound, then toggle steps.
 
-## Build and upload
+To import your own hits, place **16 kHz, mono, signed 16-bit PCM WAV** files of up to **12,000 frames** at `/S8N/S01.WAV` through `/S8N/S04.WAV`. The firmware loads them at boot. On Sampler, **L** reloads the selected file and **S** saves the current pad. Without microSD, the four pads and groove edit in RAM.
 
-Install Python and PlatformIO Core, or open this folder in VS Code with PlatformIO IDE.
+## Record a longer take
+
+On **Project**, press **R** to start recording the mic to microSD. You can return to the Grid and perform with the hardware synth. Come back to Project and press **R** to finish. **P** plays the latest finished take through the Cardputer. Press **P** again to stop playback.
+
+Takes are numbered `/S8N/TAKES/T0001.WAV`, `T0002.WAV` and so on. Each is mono 16-bit PCM at 16 kHz, about **1.92 MB per minute**. A take closes at one hour, or earlier if the microphone queue overruns. Finish the take before powering off or removing the card. An interrupted write may leave a `.TMP` file. Earlier numbered WAVs are preserved.
+
+## Build and install
+
+The project retains the v0.1 PlatformIO target. The exact M5 library versions are pinned in `platformio.ini`. From this folder, run:
 
 ```sh
 python -m pip install platformio==6.2.0
-python -m platformio run
-python -m platformio run --target upload
+python -m platformio run -e cardputer
 ```
 
-Run these commands from the repository root. Select a port explicitly if needed:
+To install over USB once you're ready to replace the current firmware, use `python -m platformio run -e cardputer --target upload`. Add `--upload-port COM5` (or your actual port) if needed. For a board that requires manual download mode, use M5Stack's G0-at-power-on procedure. PlatformIO writes the bootloader, partition layout and application together. The build's `.pio/build/cardputer/firmware.bin` is the application partition at **0x10000**.
 
-```sh
-python -m platformio run --target upload --upload-port COM5
-```
+The separate release file **S8N-Synth-v0.2-Cardputer-merged.bin** contains the bootloader, partitions and application. Use a full-flash tool at address **0x0**. The source build and this merged image target the original 8 MB Cardputer.
 
-On Linux a port may look like `/dev/ttyACM0`. Uploading replaces the firmware currently installed on the Cardputer. If the board will not enter download mode, use M5Stack's documented G0-at-power-on procedure.
+## Verification
 
-Build outputs are in `.pio/build/cardputer/`. `firmware.bin` is an **application image**, not a merged image for address 0. Use PlatformIO's upload command to write the application, bootloader and partition table at the correct offsets. M5Launcher installation has not yet been tested.
+The host suites under `tests/` exercise Live Keys, the sequencer, swing, MIDI byte parsing, time rollover, overlapping notes, sample capture and import, full-length take playback, and project recall after interrupted writes. The commands are in the build workflow. The audio suites simulate the driver and SD card. Follow the hardware checks in [BENCH_TEST.md](docs/BENCH_TEST.md) for listening, switch routing and SD timing.
 
-The GitHub Actions workflow builds firmware and uploads the application, bootloader and partition files as an artifact. Download these only from a successful run. No public release is published automatically.
-
-## Validation
-
-The portable note engine has host tests for held notes, same-count key swaps, chords, note-off pairing, panic, mode and octave changes, GM program wrapping, and MIDI value bounds:
-
-```sh
-g++ -std=c++17 -Wall -Wextra -Werror -pedantic -Iinclude tests/performance_test.cpp -o /tmp/s8n-test
-/tmp/s8n-test
-```
-
-Hardware validation remains required. Follow [the bench checklist](docs/BENCH_TEST.md) with each module before considering this a release. The UI shows outgoing note activity, not confirmation that a module is connected.
-
-## Next milestones
-
-1. Bench-check both modules, note release behavior and keyboard rollover.
-2. Add a nonblocking 16-step drum/bass/lead sequencer, tempo, swing and mutes.
-3. Add versioned pattern/settings storage on microSD.
-4. Add MIDI input and clock handling after verifying Unit MIDI switch routing.
-5. Investigate a separate software sampler/audio path. The SAM2695 is a ROM sound engine; samples cannot simply be uploaded into it.
-
-## Implementation references
-
-- [Cardputer hardware, Grove pins and build configuration](https://docs.m5stack.com/en/core/Cardputer)
-- [UnitSynth](https://docs.m5stack.com/en/unit/Unit-Synth)
-- [Unit MIDI and switch routing](https://docs.m5stack.com/en/unit/Unit-MIDI)
-- [M5Cardputer library](https://github.com/m5stack/M5Cardputer)
-- [M5Unit-Synth MIDI implementation](https://github.com/m5stack/M5Unit-Synth)
-
-S8N Synth uses a small, testable UART MIDI sender rather than depending on an additional synth library. M5Stack libraries retain their respective licenses.
+Built on the original [S8N Synth project](https://github.com/H3llawts/Cardputer-S8N-Synth), revision `54267a9`. Hardware references from M5Stack cover the [Cardputer](https://docs.m5stack.com/en/core/Cardputer), [Unit Synth](https://docs.m5stack.com/en/unit/Unit_Synth), and [Unit MIDI](https://docs.m5stack.com/en/unit/Unit_MIDI).
