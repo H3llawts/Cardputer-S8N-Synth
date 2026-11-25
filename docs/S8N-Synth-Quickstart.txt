@@ -1,0 +1,55 @@
+S8N SYNTH v0.2  /  ORIGINAL CARDPUTER
+
+INSTALL THE MERGED IMAGE
+
+The target is the 8 MB M5Stack Cardputer K132. Installing this build
+replaces the current firmware. Save anything you need from device flash.
+
+1. Connect the Cardputer to your computer with a USB data cable.
+2. In desktop Chrome or Edge, open Espressif's serial flasher.
+   https://espressif.github.io/esptool-js/
+3. Connect to the Cardputer's port and check that it identifies an ESP32-S3.
+   If it needs manual download mode, power it off, hold G0 while applying
+   power and release G0 once the computer sees the port.
+4. Choose S8N-Synth-v0.2-Cardputer-merged.bin. Set its flash address to
+   0x0. Use the image's flash settings and leave "Erase all" unchecked.
+   Program the image, wait for verification, disconnect and restart.
+
+FIRST SOUND
+
+With power off, attach ONE Unit Synth or Unit MIDI to the Grove socket.
+Insert a FAT32 microSD for persistent pads, projects and microphone takes.
+Unit Synth uses its own speaker. For Unit MIDI, plug into the jack marked
+AUDIO. Separate / FROM CORE also sends MIDI to external gear.
+
+Boot into Live Keys. A plays C4 on Saw Lead. The keys A W S E D F T G
+Y H U J K cover a chromatic octave. Press 9 for drums. G0 or Space
+silences Live Keys.
+
+FIRST GROOVE
+
+Press TAB, then SPACE. The 110 BPM factory pattern starts. Press 1 to 4
+to switch between four variations. On the Grid, ; and . choose a lane,
+, and / choose a step, and ENTER toggles the hit. M mutes the lane.
+R arms live note overdub. Press SPACE to stop. TAB cycles Grid, Sound,
+Sampler and Project. The backtick key returns to Live Keys.
+
+FIRST SAMPLE
+
+On Sampler, use , and / to select a slot. Press R, clap or speak, then
+press R again. The pad stops by itself at 0.75 s. ENTER auditions it.
+Pads play from the Cardputer speaker. On the Grid, choose SMP A or SMP B.
+On Sound, set SLOT to your pad number. Return to Grid and toggle a step.
+
+FIRST TAKE AND SAVE
+
+On Project, press R to start a longer mic take. You can visit the Grid
+and keep playing the external unit. Return to Project and press R to
+finish. P plays the latest take. WAVs are in /S8N/TAKES on microSD.
+The recorder hears the room. To capture Unit MIDI acoustically, play
+its AUDIO output through a speaker. Local pads pause while the mic runs.
+
+Project S saves your four patterns and lane settings to the selected slot.
+Project L recalls it. The four WAV pads are shared between project slots.
+The README in the source archive contains the full controls, WAV import
+format, build commands and bench checks. Shift + / opens the key guide.

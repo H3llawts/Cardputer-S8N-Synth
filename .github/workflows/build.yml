@@ -17,6 +17,14 @@ jobs:
         run: |
           g++ -std=c++17 -Wall -Wextra -Werror -pedantic -Iinclude tests/performance_test.cpp -o /tmp/s8n-test
           /tmp/s8n-test
+          g++ -std=c++17 -Wall -Wextra -Werror -Itests/host -Isrc src/Engine.cpp tests/host/engine_test.cpp -o /tmp/s8n-engine
+          /tmp/s8n-engine
+          g++ -std=c++17 -Wall -Wextra -Werror -Itests/host -Isrc src/Engine.cpp src/Storage.cpp tests/host/storage_test.cpp -o /tmp/s8n-storage
+          /tmp/s8n-storage
+          g++ -std=c++17 -Itests/audio -Isrc src/Sampler.cpp tests/audio/sampler_test.cpp -o /tmp/s8n-pads
+          /tmp/s8n-pads
+          g++ -std=c++17 -Itests/audio -Isrc src/Sampler.cpp src/Takes.cpp tests/audio/takes_test.cpp -o /tmp/s8n-takes
+          /tmp/s8n-takes
       - name: Install PlatformIO
         run: python -m pip install platformio==6.2.0
       - name: Build firmware
